@@ -1,4 +1,12 @@
-# 🤖 Ollama Agent Mode Proxy
+# Ollama Agent Mode Proxy 🤖
+
+## Documentation
+
+- [**System Architecture**](docs/ARCHITECTURE.md)
+- [**Tool Execution Framework**](docs/TOOLS.md)
+- [**Security Design**](docs/SECURITY.md)
+- [**Performance Optimization**](docs/PERFORMANCE.md)
+- [**Integrations Guide**](docs/INTEGRATIONS.md)
 
 ## Purpose
 
@@ -17,31 +25,6 @@ Our proxy provides a unified solution that:
 - Implements secure, sandboxed tool execution
 - Manages conversational context
 - Supports advanced code generation workflows
-## Key Features
-
-🔄 **Protocol Translation**
-- Convert between OpenAI and Ollama API formats
-- Support for streaming and non-streaming responses
-
-🛠️ **Dynamic Tool Execution**
-- Built-in tools for file and system operations
-- Secure, permission-based tool execution
-- Extensible tool framework
-
-📦 **Conversation Management**
-- Stateful conversation tracking
-- Context window optimization
-- Multi-session support via Redis
-
-🔒 **Advanced Security**
-- Workspace-limited execution
-- Containerized tool execution
-- Permission-based access control
-
-📊 **Comprehensive Monitoring**
-- Prometheus metrics
-- Request tracking
-- Tool execution logging
 
 ## Quick Start Guide
 
@@ -70,6 +53,8 @@ pip install -r requirements.txt
 ```
 
 ### Configuration
+
+Detailed configuration instructions are available in our [Architecture Documentation](docs/ARCHITECTURE.md).
 
 Create a `.env` file:
 
@@ -100,96 +85,39 @@ python main.py
 uvicorn main:app --host 0.0.0.0 --port 8000
 ```
 
+## Docker Deployment
+
+Full Docker deployment guide is available in the [Architecture Documentation](docs/ARCHITECTURE.md).
+```bash
+# Build Docker image
+docker build -t ollama-agent-proxy:latest .
+
+# Run with Docker Compose
+docker-compose up -d
+```
+
+## Key Features
+
+- 🔄 OpenAI-to-Ollama API Translation
+- 🛠️ Dynamic Tool Execution
+- 📦 Conversation Management
+- 🔒 Secure Execution Environment
+- 📊 Prometheus Metrics Tracking
 ## Supported Tools
 
-### Built-in Tools
+See our comprehensive [Tools Documentation](docs/TOOLS.md) for detailed information about built-in and custom tools.
 
-1. `list_files`: List directory contents
-2. `read_file`: Read file contents
-3. `write_file`: Create or modify files
-4. `run_command`: Execute shell commands
+## Security
 
-## Integration Examples
+We take security seriously. Our [Security Documentation](docs/SECURITY.md) provides an in-depth look at our security design.
 
-### Continue IDE Configuration
+## Performance
 
-```json
-{
-  "models": [{
-    "title": "Ollama Agent",
-    "provider": "openai",
-    "model": "llama3",
-    "apiBase": "http://localhost:8000/v1",
-    "apiKey": "dummy"
-  }]
-}
-```
+Performance is a key focus. Check out our [Performance Optimization Guide](docs/PERFORMANCE.md) for details.
 
-## Example Use Cases
+## Integrations
 
-### Code Generation Workflow
-
-```python
-# Complex code generation request
-response = requests.post('http://localhost:8000/v1/chat/completions', json={
-    "model": "ollama/llama3",
-    "messages": [
-        {
-            "role": "system",
-            "content": "You are a Python developer assistant"
-        },
-        {
-            "role": "user",
-            "content": "Create a FastAPI endpoint for user registration"
-        }
-    ],
-    "tools": [
-        {
-            "type": "function",
-            "function": {
-                "name": "write_file",
-                "description": "Write generated code to a file"
-            }
-        }
-    ]
-})
-```
-## Security Features
-
-- Workspace path isolation
-- Containerized tool execution
-- Permission-based access control
-- Comprehensive logging
-- Rate limiting mechanisms
-
-## Performance Optimization
-
-- Async design with FastAPI
-- Redis-based caching
-- Prometheus metrics tracking
-- Connection pooling
-
-## Advanced Configuration
-
-### Custom Tool Development
-
-Extend the `ToolExecutor` to add custom tools.
-
-## Monitoring and Observability
-
-Prometheus metrics are exposed tracking:
-- Request counts
-- Execution durations
-- Active sessions
-- Tool execution statistics
-
-## Troubleshooting
-
-### Common Issues
-
-1. **Ollama Not Running**
-2. **Tool Execution Failures**
-3. **Redis Connection Problems**
+Learn about supported development environments and integration patterns in our [Integrations Guide](docs/INTEGRATIONS.md).
 
 ## Development & Contributing
 

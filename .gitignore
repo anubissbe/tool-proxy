@@ -1,0 +1,118 @@
+# Python Bytecode
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual Environments
+venv/
+env/
+.env/
+.venv/
+ENV/
+
+# Distribution / packaging
+dist/
+build/
+*.egg-info/
+*.egg
+
+# IDE and Editor Directories
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# Logging
+*.log
+logs/
+
+# Environment Files (except .env.example)
+.env
+.env.local
+.env.development
+.env.production
+
+# Secrets and Credentials
+*.key
+*.pem
+secrets.json
+
+# Database and State Files
+*.sqlite3
+*.db
+
+# Dependency Directories
+node_modules/
+jspm_packages/
+
+# Docker
+.docker/
+
+# macOS System Files
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Windows System Files
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# Testing and Coverage
+.coverage
+htmlcov/
+.pytest_cache/
+.mypy_cache/
+
+# Redis Persistence
+*.rdb
+
+# Ollama Model Weights (optional, depending on your setup)
+models/
+
+# Project-Specific Workspace
+workspace/
+tmp/
+
+# Prometheus Data
+prometheus_data/
+
+# Temporary Files
+*.tmp
+*.bak
+*.swp
+
+# Compiled Source
+*.com
+*.class
+*.dll
+*.exe
+*.o
+*.so
+
+# Backup Files
+*.bak
+*.gho
+*.ori
+*.orig
+*.tmp
+
+# Specific to this project
+config.py
+local_config.py
+
+# CI/CD Specific
+.github/workflow_logs/
+.gitlab-ci/logs/
+
+# Terraform State
+*.tfstate
+*.tfstate.backup
+
+# Sensitive Project Configurations
+**/secrets/*
+!**/secrets/.gitkeep
