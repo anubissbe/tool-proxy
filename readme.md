@@ -26,9 +26,52 @@ Our proxy provides a unified solution that:
 - Manages conversational context
 - Supports advanced code generation workflows
 
-## Quick Start Guide
+## Quick Start
 
-### Prerequisites
+### Unix/Linux
+```bash
+# Basic startup
+./start.sh
+
+# Start with GPU support
+./start.sh --gpu
+
+# Start and show logs
+./start.sh --logs
+```
+
+### Windows
+
+```powershell
+# Basic startup
+.\start.ps1
+
+# Start with GPU support
+.\start.ps1 -Gpu
+
+# Start and show logs
+.\start.ps1 -Logs
+```
+
+## Startup Script Features
+
+### Dependency Checking
+- Validates Docker installation
+- Checks NVIDIA Container Toolkit (for GPU)
+- Verifies Docker Compose
+
+### Environment Setup
+- Creates `.env` file from template
+- Sets up workspace directory
+- Guides API key configuration
+
+### Service Management
+- Builds Docker containers
+- Starts services
+- Displays access points
+- Optional log streaming
+
+## Prerequisites
 
 - Python 3.10+
 - Ollama (https://ollama.com)
@@ -36,7 +79,6 @@ Our proxy provides a unified solution that:
 - Docker (optional)
 
 ### Installation
-
 ```bash
 # Clone the repository
 git clone https://github.com/your-username/ollama-agent-mode-proxy.git
@@ -53,7 +95,6 @@ pip install -r requirements.txt
 ```
 
 ### Configuration
-
 Detailed configuration instructions are available in our [Architecture Documentation](docs/ARCHITECTURE.md).
 
 Create a `.env` file:
@@ -75,16 +116,6 @@ REDIS_PORT=6379
 WORKSPACE_PATH=/path/to/secure/workspace
 ```
 
-### Running the Proxy
-
-```bash
-# Development Mode
-python main.py
-
-# Production Mode
-uvicorn main:app --host 0.0.0.0 --port 8000
-```
-
 ## Docker Deployment
 
 Full Docker deployment guide is available in the [Architecture Documentation](docs/ARCHITECTURE.md).
@@ -96,6 +127,75 @@ docker build -t ollama-agent-proxy:latest .
 docker-compose up -d
 ```
 
+## GPU Support and MCP Server
+
+### Prerequisites for GPU Acceleration
+
+1. NVIDIA GPU
+2. NVIDIA Container Toolkit
+3. Docker with NVIDIA runtime
+
+### Installation Steps
+```bash
+# Install NVIDIA Container Toolkit
+distribution=$(. /etc/os-release;echo $ID$VERSION_ID)
+curl -s -L https://nvidia.github.io/nvidia-docker/gpgkey | sudo apt-key add -
+curl -s -L https://nvidia.github.io/nvidia-docker/$distribution/nvidia-docker.list | sudo tee /etc/apt/sources.list.d/nvidia-docker.list
+
+sudo apt-get update
+sudo apt-get install -y nvidia-container-toolkit
+sudo systemctl restart docker
+```
+
+### Configuring MCP (Model Context Protocol) Server
+
+1. Obtain Google Custom Search API Key:
+   - Go to Google Cloud Console
+   - Enable Custom Search API
+   - Create credentials
+   - Copy API Key and Custom Search Engine ID
+
+2. Update `.env` file:
+```bash
+SEARCH_API_KEY=your_google_api_key
+SEARCH_CX=your_custom_search_engine_id
+```
+
+### Running with GPU Support
+
+```bash
+# Build GPU-enabled containers
+docker-compose -f docker-compose.yml build
+
+# Start services
+docker-compose up -d
+```
+
+### MCP Server Capabilities
+
+The MCP Server provides:
+- Internet search functionality
+- Tool request processing
+- Secure, async communication
+- Caching mechanisms
+
+### Verifying GPU Support
+
+```bash
+# Check GPU detection
+docker run --gpus all nvidia/cuda:12.1.0-base-ubuntu22.04 nvidia-smi
+
+# Verify Ollama GPU usage
+docker logs ollama
+```
+
+## Troubleshooting GPU Issues
+
+- Ensure latest NVIDIA drivers
+- Check Docker NVIDIA runtime
+- Verify container capabilities
+- Review system CUDA version
+
 ## Key Features
 
 - 🔄 OpenAI-to-Ollama API Translation
@@ -103,6 +203,7 @@ docker-compose up -d
 - 📦 Conversation Management
 - 🔒 Secure Execution Environment
 - 📊 Prometheus Metrics Tracking
+
 ## Supported Tools
 
 See our comprehensive [Tools Documentation](docs/TOOLS.md) for detailed information about built-in and custom tools.
@@ -160,7 +261,7 @@ MIT License
 For issues, feature requests, or contributions:
 - Open a GitHub Issue
 - Join our Discord community
-- Email: support@example.com
+- Email: nosupport@dontemailme.com
 
 ---
 

@@ -1,31 +1,66 @@
 version: '3.8'
 
 services:
-  proxy:
-    build: .
-    ports:
-      - "8000:8000"
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
-      - ./workspace:/tmp/agent_workspace
-    environment:
-      - OLLAMA_HOST=ollama:11434
-      - REDIS_HOST=redis
-    depends_on:
-      - ollama
-      - redis
-
   ollama:
-    image: ollama/ollama
+    build:
+      context: .
+      dockerfile: Dockerfile.ollama-gpu
+    container_name: ollama
     ports:
       - "11434:11434"
     volumes:
       - ollama_data:/root/.ollama
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+    restart: always
+
+  mcp-server:
+    build:
+      context: ./mcp_server
+      dockerfile: Dockerfile
+    container_name: mcp-server
+    ports:
+      - "8765:8765"
+    environment:
+      - SEARCH_API_KEY=${SEARCH_API_KEY}
+      - SEARCH_CX=${SEARCH_CX}
+    restart: always
+
+  ollama-proxy:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: ollama-agent-proxy
+    ports:
+      - "8000:8000"
+    environment:
+      - OLLAMA_BASE_URL=http://ollama:11434
+      - MCP_SERVER_URL=http://mcp-server:8765
+      - REDIS_HOST=redis
+      - WORKSPACE_PATH=/workspace
+    volumes:
+      - ./workspace:/workspace
+      - /var/run/docker.sock:/var/run/docker.sock
+    depends_on:
+      - ollama
+      - mcp-server
+      - redis
+    restart: always
 
   redis:
     image: redis:alpine
+    container_name: redis
     ports:
       - "6379:6379"
+    volumes:
+      - redis_data:/data
+    restart: always
 
 volumes:
   ollama_data:
+  redis_data

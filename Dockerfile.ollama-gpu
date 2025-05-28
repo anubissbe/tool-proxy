@@ -1,0 +1,42 @@
+# Use NVIDIA CUDA base image with Ubuntu
+FROM nvidia/cuda:12.1.0-base-ubuntu22.04
+
+# Set environment variables
+ENV DEBIAN_FRONTEND=noninteractive
+ENV OLLAMA_HOST=0.0.0.0
+ENV OLLAMA_PORT=11434
+
+# Install system dependencies
+RUN apt-get update && apt-get install -y \
+    curl \
+    ca-certificates \
+    gnupg \
+    wget \
+    software-properties-common \
+    git \
+    && rm -rf /var/lib/apt/lists/*
+
+# Install NVIDIA Container Toolkit
+RUN distribution=$(. /etc/os-release;echo $ID$VERSION_ID) \
+    && curl -s -L https://nvidia.github.io/nvidia-docker/gpgkey | apt-key add - \
+    && curl -s -L https://nvidia.github.io/nvidia-docker/$distribution/nvidia-docker.list | tee /etc/apt/sources.list.d/nvidia-docker.list
+
+RUN apt-get update && apt-get install -y \
+    nvidia-container-toolkit \
+    nvidia-container-runtime
+
+# Install Ollama
+RUN curl https://ollama.ai/install.sh | sh
+
+# Expose Ollama port
+EXPOSE 11434
+
+# Create a directory for models
+RUN mkdir -p /root/.ollama/models
+
+# Pull default models during build
+RUN ollama pull llama3
+RUN ollama pull codellama
+
+# Set entrypoint
+ENTRYPOINT ["ollama", "serve"]
