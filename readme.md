@@ -220,6 +220,34 @@ Performance is a key focus. Check out our [Performance Optimization Guide](docs/
 
 Learn about supported development environments and integration patterns in our [Integrations Guide](docs/INTEGRATIONS.md).
 
+## Configuring Continue with Ollama Proxy in VS Code
+
+### GUI Configuration Steps
+
+1. Open VS Code
+2. Install the Continue extension
+3. Open Continue extension settings
+   - Click on the Continue icon in the sidebar
+   - Click "Provider Settings" or "Add Provider"
+4. Select "Custom (OpenAI-compatible)"
+5. Configure the provider:
+   - **Base URL**: `http://localhost:8000`
+   - **Model Name**: `qwen2.5-coder:7b-instruct`
+   - **API Key**: Leave blank
+6. Save the configuration
+
+### Troubleshooting
+- Ensure ToolProxy Docker containers are running
+- Verify Ollama proxy is accessible at `http://localhost:8000`
+- Restart VS Code if connection fails
+
+### Notes
+- The configuration uses the local Ollama proxy
+- You can switch models by changing the "Model Name"
+- No external API key is required for this local setup
+
+## Development & Contributing
+
 ## Development & Contributing
 
 ### Running Tests

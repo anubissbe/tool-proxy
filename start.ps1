@@ -17,7 +17,7 @@ function Check-Dependencies {
 
     # Check Docker Compose
     try {
-        $composeVersion = docker-compose --version
+        $composeVersion = docker compose version
         Write-Host "Docker Compose is installed: $composeVersion" -ForegroundColor Green
     }
     catch {
@@ -52,28 +52,37 @@ function Start-Services {
 
     Write-Host "Starting services..." -ForegroundColor Yellow
 
-    if ($UseGpu) {
-        Write-Host "Starting with GPU support" -ForegroundColor Green
-        docker-compose -f docker-compose.yml build
-        docker-compose -f docker-compose.yml up -d
+    try {
+        # Validate Docker Compose configuration and suppress version warning
+        $configCheck = docker compose config 2>&1
+            # Build and start services
+        if ($UseGpu) {
+            Write-Host "Starting with GPU support" -ForegroundColor Green
+            docker compose build
+            docker compose up -d
     }
-    else {
-        Write-Host "Starting without GPU support" -ForegroundColor Green
-        docker-compose -f docker-compose.yml build
-        docker-compose -f docker-compose.yml up -d
+        else {
+            Write-Host "Starting without GPU support" -ForegroundColor Green
+            docker compose build
+            docker compose up -d
+    }
+}
+    catch {
+        Write-Host "Error starting services: $_" -ForegroundColor Red
+        exit 1
     }
 }
 
 # Function to check service status
 function Check-ServiceStatus {
     Write-Host "Checking service status..." -ForegroundColor Yellow
-    docker-compose ps
+    docker compose ps
 }
 
 # Function to show logs
 function Show-Logs {
     Write-Host "Showing service logs..." -ForegroundColor Yellow
-    docker-compose logs -f
+    docker compose logs -f
 }
 
 # Main script function
@@ -100,9 +109,6 @@ function Main {
     Write-Host "- MCP Server: http://localhost:8765"
     Write-Host "- Proxy Server: http://localhost:8000"
 }
-
-# Make script executable
-chmod +x start.ps1
 
 # Execute main function with parameters
 Main @args

@@ -47,9 +47,12 @@ services:
       - ./workspace:/workspace
       - /var/run/docker.sock:/var/run/docker.sock
     depends_on:
-      - ollama
-      - mcp-server
-      - redis
+      ollama:
+        condition: service_started
+      mcp-server:
+        condition: service_started
+      redis:
+        condition: service_started
     restart: always
 
   redis:
@@ -63,4 +66,4 @@ services:
 
 volumes:
   ollama_data:
-  redis_data
+  redis_data:
